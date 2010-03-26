@@ -152,8 +152,10 @@ def replace(text, max_width=MAX_WIDTH, max_height=MAX_HEIGHT):
         except KeyError:
             try:
                 # Build the URL based on the properties defined in the OEmbed spec.
-                url = u"%s?url=%s&maxwidth=%s&maxheight=%s&format=%s" % (
-                    rule.endpoint, part, max_width, max_height, FORMAT
+                sep = "?" in rule.endpoint and "&" or "?"
+                clean_part = urllib2.quote(part)
+                url = u"%s%surl=%s&maxwidth=%s&maxheight=%s&format=%s" % (
+                    rule.endpoint, sep, clean_part, max_width, max_height, FORMAT
                 )
                 # Fetch the link and parse the JSON.
                 resp = simplejson.loads(fetch(url))
