@@ -148,5 +148,15 @@
             "name": "Scribd",                                                                                                              
             "format": 1                                                                                                                    
      	}       
+    },
+    {
+        "pk": 17,
+        "model": "oembed.providerrule",
+        "fields": {
+            "regex": "http://vids.myspace.com/.*",
+            "endpoint": "http://vids.myspace.com/index.cfm?fuseaction=oembed",
+            "name": "MySpace",
+            "format": 1
+        }
     }
 ]
