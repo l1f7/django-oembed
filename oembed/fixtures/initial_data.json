@@ -147,7 +147,7 @@
             "endpoint": "http://www.scribd.com/services/oembed",                                                                           
             "name": "Scribd",                                                                                                              
             "format": 1                                                                                                                    
-     	}       
+        }
     },
     {
         "pk": 17,
