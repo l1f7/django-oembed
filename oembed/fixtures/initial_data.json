@@ -53,7 +53,7 @@
         "pk": 6,
         "model": "oembed.providerrule",
         "fields": {
-            "regex": "http://\\S*.collegehumor.com/video:\\S*",
+            "regex": "http://\\S*.collegehumor.com/video:[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*",
             "endpoint": "http://oohembed.com/oohembed/",
             "name": "CollegeHumor Video (OohEmbed)",
             "format": 1
@@ -73,7 +73,7 @@
         "pk": 8,
         "model": "oembed.providerrule",
         "fields": {
-            "regex": "http://video.google.com/videoplay?\\S*",
+            "regex": "http://video.google.com/videoplay?[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*",
             "endpoint": "http://oohembed.com/oohembed/",
             "name": "Google Video (OohEmbed)",
             "format": 1
@@ -123,7 +123,7 @@
         "pk": 13,
         "model": "oembed.providerrule",
         "fields": {
-            "regex": "http://\\S*.youtube.com/watch\\S*",
+            "regex": "http://\\S*.youtube.com/watch[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*",
             "endpoint": "http://www.youtube.com/oembed",
             "name": "YouTube",
             "format": 1
@@ -193,7 +193,7 @@
         "pk": 20,
         "model": "oembed.providerrule",
         "fields": {
-            "regex": "(http://\\S*?screencast.com/\\S*/media/\\S*|http://\\S*?screencast.com/t/\\S*)",
+            "regex": "(http://\\S*?screencast.com/\\S*/media/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*|http://\\S*?screencast.com/t/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*)",
             "endpoint": "http://api.embed.ly/v1/api/oembed",
             "name": "Screencast (Embedly)",
             "format": 1
@@ -213,7 +213,7 @@
         "pk": 22,
         "model": "oembed.providerrule",
         "fields": {
-            "regex": "(http://my.opera.com/\\S*/albums/show.dml\\?id=\\S*|http://my.opera.com/\\S*/albums/showpic.dml\\?album=\\S*&picture=\\S*)",
+            "regex": "(http://my.opera.com/\\S*/albums/show.dml\\?id=[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*|http://my.opera.com/\\S*/albums/showpic.dml\\?album=\\S*&picture=[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*)",
             "endpoint": "http://api.embed.ly/v1/api/oembed",
             "name": "My Opera (Embedly)",
             "format": 1
@@ -273,7 +273,7 @@
         "pk": 28,
         "model": "oembed.providerrule",
         "fields": {
-            "regex": "(http://i\\S*.photobucket.com/albums/\\S*|http://gi\\S*.photobucket.com/groups/\\S*)",
+            "regex": "(http://i\\S*.photobucket.com/albums/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*|http://gi\\S*.photobucket.com/groups/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*)",
             "endpoint": "http://api.embed.ly/v1/api/oembed",
             "name": "Photobucket (Embedly)",
             "format": 1
@@ -313,7 +313,7 @@
         "pk": 32,
         "model": "oembed.providerrule",
         "fields": {
-            "regex": "(http://\\S*amazon.\\S*/gp/product/\\S*|http://\\S*amazon.\\S*/\\S*/dp/\\S*|http://\\S*amazon.\\S*/dp/\\S*|http://\\S*amazon.\\S*/o/ASIN/\\S*|http://\\S*amazon.\\S*/gp/offer-listing/\\S*|http://\\S*amazon.\\S*/\\S*/ASIN/\\S*|http://\\S*amazon.\\S*/gp/product/images/\\S*)",
+            "regex": "(http://\\S*amazon.\\S*/gp/product/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*|http://\\S*amazon.\\S*/\\S*/dp/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*|http://\\S*amazon.\\S*/dp/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*|http://\\S*amazon.\\S*/o/ASIN/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*|http://\\S*amazon.\\S*/gp/offer-listing/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*|http://\\S*amazon.\\S*/\\S*/ASIN/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*|http://\\S*amazon.\\S*/gp/product/images/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*)",
             "endpoint": "http://api.embed.ly/v1/api/oembed",
             "name": "Amazon (Embedly)",
             "format": 1
@@ -353,7 +353,7 @@
         "pk": 36,
         "model": "oembed.providerrule",
         "fields": {
-            "regex": "(http://\\S*.dailymotion.com/video/\\S*|http://\\S*.dailymotion.com/\\S*/video/\\S*)",
+            "regex": "(http://\\S*.dailymotion.com/video/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*|http://\\S*.dailymotion.com/\\S*/video/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*)",
             "endpoint": "http://api.embed.ly/v1/api/oembed",
             "name": "Daily Motion (Embedly)",
             "format": 1
@@ -383,7 +383,7 @@
         "pk": 39,
         "model": "oembed.providerrule",
         "fields": {
-            "regex": "http://(www|vids).myspace.com/index.cfm\\?fuseaction=\\S*&videoid\\S*",
+            "regex": "http://(www|vids).myspace.com/index.cfm\\?fuseaction=\\S*&videoid[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*",
             "endpoint": "http://api.embed.ly/v1/api/oembed",
             "name": "Myspace Videos (Embedly)",
             "format": 1
@@ -413,7 +413,7 @@
         "pk": 42,
         "model": "oembed.providerrule",
         "fields": {
-            "regex": "(http://video.yahoo.com/watch/\\S*/\\S*|http://video.yahoo.com/network/\\S*)",
+            "regex": "(http://video.yahoo.com/watch/\\S*/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*|http://video.yahoo.com/network/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*)",
             "endpoint": "http://api.embed.ly/v1/api/oembed",
             "name": "Yahoo! Video (Embedly)",
             "format": 1
@@ -423,7 +423,7 @@
         "pk": 43,
         "model": "oembed.providerrule",
         "fields": {
-            "regex": "http://\\S*?liveleak.com/view?\\S*",
+            "regex": "http://\\S*?liveleak.com/view?[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*",
             "endpoint": "http://api.embed.ly/v1/api/oembed",
             "name": "LiveLeak (Embedly)",
             "format": 1
@@ -473,7 +473,7 @@
         "pk": 48,
         "model": "oembed.providerrule",
         "fields": {
-            "regex": "(http://movieclips.com/watch/\\S*/\\S*/|http://movieclips.com/watch/\\S*/\\S*/\\S*/\\S*)",
+            "regex": "(http://movieclips.com/watch/\\S*/\\S*/|http://movieclips.com/watch/\\S*/\\S*/\\S*/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*)",
             "endpoint": "http://api.embed.ly/v1/api/oembed",
             "name": "Movie Clips (Embedly)",
             "format": 1
@@ -533,7 +533,7 @@
         "pk": 54,
         "model": "oembed.providerrule",
         "fields": {
-            "regex": "(http://www.thedailyshow.com/(watch|full-episodes)/\\S*|http://www.thedailyshow.com/collection/\\S*/\\S*/\\S*)",
+            "regex": "(http://www.thedailyshow.com/(watch|full-episodes)/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*|http://www.thedailyshow.com/collection/\\S*/\\S*/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*)",
             "endpoint": "http://api.embed.ly/v1/api/oembed",
             "name": "The Daily Show (Embedly)",
             "format": 1
@@ -563,7 +563,7 @@
         "pk": 57,
         "model": "oembed.providerrule",
         "fields": {
-            "regex": "http://www.comedycentral.com/videos/index.jhtml?\\S*",
+            "regex": "http://www.comedycentral.com/videos/index.jhtml?[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*",
             "endpoint": "http://api.embed.ly/v1/api/oembed",
             "name": "Comedy Central (Embedly)",
             "format": 1
