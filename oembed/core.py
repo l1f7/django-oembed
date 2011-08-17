@@ -98,6 +98,20 @@ def re_parts(regex_list, text):
     last_bit = text[prev_end:]
     if len(last_bit) > 0:
         yield (-1, last_bit)
+        
+def fetch_dict(url, max_width=MAX_WIDTH, max_height=MAX_HEIGHT):
+    # TO DO: check cache first
+    providers = list(ProviderRule.objects.all())
+    rule = None
+    for provider in providers:
+        pattern = re.compile(provider.regex)
+        if re.match(pattern, url):
+            rule = provider
+            
+    if rule:       
+        oembedurl = u"%s?url=%s&maxwidth=%s&maxheight=%s&format=%s" % (rule.endpoint, url, max_width, max_height, FORMAT)
+        # Fetch the link and parse the JSON.
+        return simplejson.loads(fetch(oembedurl))
 
 def replace(text, max_width=MAX_WIDTH, max_height=MAX_HEIGHT):
     """
