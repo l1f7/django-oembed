@@ -1,21 +1,21 @@
+import gzip
+import logging
 import re
 import urllib2
-import gzip
 from heapq import heappush, heappop
 try:
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO
-try:
-    import simplejson
-except ImportError:
-    from django.utils import simplejson
+
 from django.conf import settings
 from django.utils.http import urlencode
+from django.utils import simplejson
 from django.utils.safestring import mark_safe
-from oembed.models import ProviderRule, StoredOEmbed
 from django.template.loader import render_to_string
-import logging
+
+from .models import ProviderRule, StoredOEmbed
+
 logger = logging.getLogger("oembed core")
 
 END_OVERRIDES = (')', ',', '.', '>', ']', ';')
