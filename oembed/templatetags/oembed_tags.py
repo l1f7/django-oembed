@@ -6,10 +6,12 @@ register = template.Library()
 
 def oembed(input, args=None):
     if args:
-        width, height = args.lower().split('x')
-        if not width and height:
-            raise template.TemplateSyntaxError("Oembed's optional WIDTHxHEIGHT" \
-                "argument requires WIDTH and HEIGHT to be positive integers.")
+        try:
+            width, height = map(int, args.lower().split('x'))
+        except ValueError:
+            raise template.TemplateSyntaxError("Oembed's optional " \
+                "WIDTHxHEIGHT argument requires WIDTH and HEIGHT to be " \
+                "positive integers.")
     else:
         width, height = None, None
     return replace(input, max_width=width, max_height=height)
@@ -20,8 +22,8 @@ register.filter('oembed', oembed)
 
 def do_oembed(parser, token):
     """
-    A node which parses everything between its two nodes, and replaces any links
-    with OEmbed-provided objects, if possible.
+    A node which parses everything between its two nodes, and replaces any
+    links with OEmbed-provided objects, if possible.
     
     Supports one optional argument, which is the maximum width and height, 
     specified like so:
@@ -34,10 +36,12 @@ def do_oembed(parser, token):
             "al) argument: WIDTHxHEIGHT, where WIDTH and HEIGHT are positive " \
             "integers.")
     if len(args) == 2:
-        width, height = args[1].lower().split('x')
-        if not width and height:
-            raise template.TemplateSyntaxError("Oembed's optional WIDTHxHEIGHT" \
-                "argument requires WIDTH and HEIGHT to be positive integers.")
+        try:
+            width, height = map(int, args[1].lower().split('x'))
+        except ValueError:
+            raise template.TemplateSyntaxError("Oembed's optional " \
+                "WIDTHxHEIGHT argument requires WIDTH and HEIGHT to be " \
+                "positive integers.")
     else:
         width, height = None, None
     nodelist = parser.parse(('endoembed',))
