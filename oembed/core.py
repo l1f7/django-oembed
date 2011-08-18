@@ -2,6 +2,7 @@ import gzip
 import logging
 import re
 import urllib2
+import urlparse
 from heapq import heappush, heappop
 try:
     from cStringIO import StringIO
@@ -99,21 +100,42 @@ def re_parts(regex_list, text):
     if len(last_bit) > 0:
         yield (-1, last_bit)
 
-def fetch_dict(url, max_width=MAX_WIDTH, max_height=MAX_HEIGHT):
+def build_url(endpoint, url, max_width, max_height):
+    # Split up the URL and extract GET parameters as a dictionary
+    split_url = urlparse.urlsplit(endpoint)
+    params = urlparse.parse_qs(split_url[3])
+    params.update({
+        'url': url,
+        'maxwidth': max_width,
+        'maxheight': max_height,
+        'format': FORMAT,
+        })
+    # Put the URL back together with the new params and return it
+    params = urlencode(params)
+    return urlparse.urlunsplit(split_url[:3] + (params,) + split_url[4:])
+
+def fetch_dict(url, max_width=None, max_height=None):
     """
     Returns the response from the oEmbed provider as a dictionary for the 
     give oEmbeddable URL.
     
     Returns None if URL could not be matched to an oEmbed provider.
+    
+    This does not take advantage of the StoredOEmbed cache, since the cached
+    objects don't contain all the information from the JSON. If you find
+    yourself using this function a lot, consider rolling you own caching.
     """
+    if not max_width:
+        max_width = MAX_WIDTH
+    if not max_height:
+        max_height = MAX_HEIGHT
     rule = None
     for provider in ProviderRule.objects.only('regex'):
         if re.match(provider.regex, url):
             rule = provider
             break
     if rule is not None:
-        oembedurl = u"%s?url=%s&maxwidth=%s&maxheight=%s&format=%s" % (
-            rule.endpoint, url, max_width, max_height, FORMAT)
+        oembedurl = build_url(rule.endpoint, url, max_width, max_height)
         # Fetch the link and parse the JSON.
         return simplejson.loads(fetch(oembedurl))
 
@@ -164,7 +186,7 @@ def replace(text, max_width=None, max_height=None):
     # Now we fetch a list of all stored patterns, and put it in a dictionary 
     # mapping the URL to to the stored model instance.
     for stored_embed in StoredOEmbed.objects.filter(
-            match__in=urls, max_width=max_width, max_height = max_height):
+            match__in=urls, max_width=max_width, max_height=max_height):
         stored[stored_embed.match] = stored_embed
     # Now we're going to do the actual replacement of URL to embed.
     for i, id_to_replace in enumerate(indices):
@@ -176,13 +198,7 @@ def replace(text, max_width=None, max_height=None):
             parts[id_to_replace] = stored[part].html
         except KeyError:
             try:
-                # Build the URL based on the properties from the OEmbed spec.
-                sep = "?" in rule.endpoint and "&" or "?"
-                q = urlencode({"url": part.encode('utf8'),
-                               "maxwidth": max_width,
-                               "maxheight": max_height,
-                               "format": FORMAT})
-                url = u"%s%s%s" % (rule.endpoint, sep, q)
+                url = build_url(rule.endpoint, part, max_width, max_height)
                 # Fetch the link and parse the JSON.
                 resp = simplejson.loads(fetch(url))
                 # Depending on the embed type, grab the associated template and
