@@ -15,8 +15,8 @@ class OEmbedField(models.URLField):
     description = "A URL pointing to an oEmbed provider"
     
     def validate(self, value, model_instance):
-        for rule in ProviderRule.objects.all():
-            if re.match(rule.regex, value):
+        for pattern in ProviderRule.objects.values_list('regex', flat=True):
+            if re.match(pattern, value):
                 return
         raise exceptions.ValidationError('Not a valid oEmbed link')
 
