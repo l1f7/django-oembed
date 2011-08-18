@@ -117,7 +117,7 @@ def fetch_dict(url, max_width=MAX_WIDTH, max_height=MAX_HEIGHT):
         # Fetch the link and parse the JSON.
         return simplejson.loads(fetch(oembedurl))
 
-def replace(text, max_width=MAX_WIDTH, max_height=MAX_HEIGHT):
+def replace(text, max_width=None, max_height=None):
     """
     Scans a block of text, replacing anything matched by a ``ProviderRule``
     pattern with an OEmbed html snippet, if possible.
@@ -129,8 +129,13 @@ def replace(text, max_width=MAX_WIDTH, max_height=MAX_HEIGHT):
     These templates are passed a context variable, ``response``, which is a 
     dictionary representation of the response.
     """
+    if not max_width:
+        max_width = MAX_WIDTH
+    if not max_height:
+        max_height = MAX_HEIGHT
+
     rules = list(ProviderRule.objects.all())
-    patterns = [re.compile(r.regex, re.I) for r in rules] # Compiled patterns from the rules
+    patterns = [re.compile(r.regex, re.I | re.U) for r in rules] # Compiled patterns from the rules
     parts = [] # The parts that we will assemble into the final return value.
     indices = [] # List of indices of parts that need to be replaced with OEmbed stuff.
     indices_rules = [] # List of indices into the rules in order for which index was gotten by.
@@ -173,7 +178,7 @@ def replace(text, max_width=MAX_WIDTH, max_height=MAX_HEIGHT):
             try:
                 # Build the URL based on the properties from the OEmbed spec.
                 sep = "?" in rule.endpoint and "&" or "?"
-                q = urlencode({"url": part,
+                q = urlencode({"url": part.encode('utf8'),
                                "maxwidth": max_width,
                                "maxheight": max_height,
                                "format": FORMAT})
