@@ -24,8 +24,8 @@ class OEmbedField(models.URLField):
 try:
     from south.modelsinspector import add_introspection_rules
 except ImportError:
-    pass # no south, nevermind
+    pass # No south, nevermind
 else:
-    # tell south to treat OEmbedFields just like URLFields
+    # Tell south to treat OEmbedFields just like URLFields
     rules = ['^%s\.OEmbedField' % (__name__.replace('.','\.'),)]
     add_introspection_rules([], rules)

@@ -64,10 +64,10 @@ def re_parts(regex_list, text):
     prev_end = 0
     iter_dict = dict((r, r.finditer(text)) for r in regex_list)
     
-    # a heapq containing matches
+    # A heapq containing matches
     matches = []
     
-    # bootstrap the search with the first hit for each iterator
+    # Bootstrap the search with the first hit for each iterator
     for regex, iterator in iter_dict.items():
         try:
             match = iterator.next()
@@ -75,17 +75,17 @@ def re_parts(regex_list, text):
         except StopIteration:
             iter_dict.pop(regex)
     
-    # process matches, revisiting each iterator from which a match is used
+    # Process matches, revisiting each iterator from which a match is used
     while matches:
-        # get the earliest match
+        # Get the earliest match
         start, match = heappop(matches)
         end = match.end()
         if start > prev_end:
-            # yield the text from current location to start of match
+            # Yield the text from current location to start of match
             yield (-1, text[prev_end:start])
-        # yield the match
+        # Yield the match
         yield (regex_list.index(match.re), text[start:end])
-        # get the next match from the iterator for this match
+        # Get the next match from the iterator for this match
         if match.re in iter_dict:
             try:
                 newmatch = iter_dict[match.re].next()
@@ -94,7 +94,7 @@ def re_parts(regex_list, text):
                 iter_dict.pop(match.re)
         prev_end = end
 
-    # yield text from end of last match to end of text
+    # Yield text from end of last match to end of text
     last_bit = text[prev_end:]
     if len(last_bit) > 0:
         yield (-1, last_bit)
@@ -158,7 +158,8 @@ def replace(text, max_width=MAX_WIDTH, max_height=MAX_HEIGHT):
                 index += 1
     # Now we fetch a list of all stored patterns, and put it in a dictionary 
     # mapping the URL to to the stored model instance.
-    for stored_embed in StoredOEmbed.objects.filter(match__in=urls, max_width=max_width, max_height = max_height):
+    for stored_embed in StoredOEmbed.objects.filter(
+            match__in=urls, max_width=max_width, max_height = max_height):
         stored[stored_embed.match] = stored_embed
     # Now we're going to do the actual replacement of URL to embed.
     for i, id_to_replace in enumerate(indices):
@@ -170,7 +171,7 @@ def replace(text, max_width=MAX_WIDTH, max_height=MAX_HEIGHT):
             parts[id_to_replace] = stored[part].html
         except KeyError:
             try:
-                # Build the URL based on the properties defined in the OEmbed spec.
+                # Build the URL based on the properties from the OEmbed spec.
                 sep = "?" in rule.endpoint and "&" or "?"
                 q = urlencode({"url": part,
                                "maxwidth": max_width,
@@ -181,7 +182,8 @@ def replace(text, max_width=MAX_WIDTH, max_height=MAX_HEIGHT):
                 resp = simplejson.loads(fetch(url))
                 # Depending on the embed type, grab the associated template and
                 # pass it the parsed JSON response as context.
-                replacement = render_to_string('oembed/%s.html' % resp['type'], {'response': resp})
+                replacement = render_to_string(
+                    'oembed/%s.html' % resp['type'], {'response': resp})
                 if replacement:
                     stored_embed = StoredOEmbed.objects.create(
                         match = part,
