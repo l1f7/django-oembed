@@ -1,6 +1,7 @@
 from django import template
 from django.template.defaultfilters import stringfilter
 from oembed.core import replace
+from oembed.models import StoredOEmbed
 
 register = template.Library()
 
@@ -24,10 +25,10 @@ def do_oembed(parser, token):
     """
     A node which parses everything between its two nodes, and replaces any
     links with OEmbed-provided objects, if possible.
-    
-    Supports one optional argument, which is the maximum width and height, 
+
+    Supports one optional argument, which is the maximum width and height,
     specified like so:
-    
+
         {% oembed 640x480 %}http://www.viddler.com/explore/SYSTM/videos/49/{% endoembed %}
     """
     args = token.contents.split()
@@ -55,10 +56,30 @@ class OEmbedNode(template.Node):
         self.nodelist = nodelist
         self.width = width
         self.height = height
-    
+
     def render(self, context):
         kwargs = {}
         if self.width and self.height:
             kwargs['max_width'] = self.width
             kwargs['max_height'] = self.height
         return replace(self.nodelist.render(context), **kwargs)
+
+
+@register.filter
+def get_oembed_thumbnail_url(oembed_url):
+    # could refactor into get_oembed_<property_name>
+    matches = StoredOEmbed.objects.filter(match=oembed_url).exclude(json='')
+    # exclude blank json for backward compatibility without flushing table
+    if not matches:
+        _ = replace(oembed_url)
+        matches = StoredOEmbed.objects.filter(
+            match=oembed_url).exclude(json='')
+    try:
+        return matches[0].get_json('thumbnail_url')
+    except IndexError:
+        # oh dear, something is seriously wrong here
+        if settings.DEBUG:
+            raise RuntimeError(
+                "StoredOEmbeds aren't gettings stored correctly!?")
+        else:
+            return '#oembed-failure' # fail silently-ish

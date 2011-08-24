@@ -183,7 +183,7 @@ def replace(text, max_width=None, max_height=None):
             if to_append:
                 parts.append(to_append)
                 index += 1
-    # Now we fetch a list of all stored patterns, and put it in a dictionary 
+    # Now we fetch a list of all stored patterns, and put it in a dictionary
     # mapping the URL to to the stored model instance.
     for stored_embed in StoredOEmbed.objects.filter(
             match__in=urls, max_width=max_width, max_height=max_height):
@@ -200,7 +200,8 @@ def replace(text, max_width=None, max_height=None):
             try:
                 url = build_url(rule.endpoint, part, max_width, max_height)
                 # Fetch the link and parse the JSON.
-                resp = simplejson.loads(fetch(url))
+                json_string = fetch(url)
+                resp = simplejson.loads(json_string)
                 # Depending on the embed type, grab the associated template and
                 # pass it the parsed JSON response as context.
                 replacement = render_to_string(
@@ -211,6 +212,7 @@ def replace(text, max_width=None, max_height=None):
                         max_width = max_width,
                         max_height = max_height,
                         html = replacement,
+                        json = json_string,
                     )
                     stored[stored_embed.match] = stored_embed
                     parts[id_to_replace] = replacement
