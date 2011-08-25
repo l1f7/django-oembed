@@ -3,6 +3,11 @@ import logging
 import re
 import urllib2
 import urlparse
+try:
+    from urlparse import parse_qs
+except ImportError:
+    # (copied to urlparse from cgi in 2.6)
+    from cgi import parse_qs
 from heapq import heappush, heappop
 try:
     from cStringIO import StringIO
@@ -103,7 +108,7 @@ def re_parts(regex_list, text):
 def build_url(endpoint, url, max_width, max_height):
     # Split up the URL and extract GET parameters as a dictionary
     split_url = urlparse.urlsplit(endpoint)
-    params = urlparse.parse_qs(split_url[3])
+    params = parse_qs(split_url[3])
     params.update({
         'url': url,
         'maxwidth': max_width,
