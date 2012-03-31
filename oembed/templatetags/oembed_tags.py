@@ -1,6 +1,5 @@
 from django import template
 from django.template.defaultfilters import stringfilter
-from django.utils.translation import ugettext_lazy as _
 from oembed.core import replace
 from oembed.models import StoredOEmbed
 
