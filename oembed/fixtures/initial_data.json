@@ -394,8 +394,8 @@
         "model": "oembed.providerrule",
         "fields": {
             "regex": "http://\\S*blip.tv/file/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*",
-            "endpoint": "http://api.embed.ly/v1/api/oembed",
-            "name": "Blip.tv (Embedly)",
+            "endpoint": "http://blip.tv/oembed",
+            "name": "Blip.tv",
             "format": 1
         }
     },
