@@ -1,6 +1,6 @@
-import settings
 from django import template
 from django.template.defaultfilters import stringfilter
+from django.utils.translation import ugettext_lazy as _
 from oembed.core import replace
 from oembed.models import StoredOEmbed
 
@@ -94,5 +94,4 @@ def get_oembed_property(oembed_url, json_property):
     if _oembed_objects[oembed_url]:
         return _oembed_objects[oembed_url].get_json(json_property)
     else:
-        # This is debatable... probably an empty string is better
-        return oembed_url
+        return ''
