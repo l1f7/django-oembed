@@ -65,22 +65,34 @@ class OEmbedNode(template.Node):
             kwargs['max_height'] = self.height
         return replace(self.nodelist.render(context), **kwargs)
 
+# This comes in handy, so you don't hit the database so many times
+# if you want to access different fields for a same object
+_oembed_objects = {}
 
 @register.filter
-def get_oembed_thumbnail_url(oembed_url):
-    # could refactor into get_oembed_<property_name>
-    matches = StoredOEmbed.objects.filter(match=oembed_url).exclude(json='')
-    # exclude blank json for backward compatibility without flushing table
-    if not matches:
-        _ = replace(oembed_url)
-        matches = StoredOEmbed.objects.filter(
-            match=oembed_url).exclude(json='')
-    try:
-        return matches[0].get_json('thumbnail_url')
-    except IndexError:
-        # oh dear, something is seriously wrong here
-        if settings.DEBUG:
-            raise RuntimeError(
-                "StoredOEmbeds aren't gettings stored correctly!?")
+def get_oembed_property(oembed_url, json_property):
+    """ Use it like this:
+        {% url_string|get_oembed_property:'thumbnail_url' %}    
+    """
+    if not oembed_url in _oembed_objects:
+        matches = StoredOEmbed.objects.filter(match=oembed_url)
+        if matches:
+            # Found it, happy path
+            oembed = matches[0]
         else:
-            return '#oembed-failure' # fail silently-ish
+            # If not found, we will try to fetch it
+            _ = replace(oembed_url)
+            matches = StoredOEmbed.objects.filter(match=oembed_url)
+            if matches:
+                # Haven't been parsed before, but now is available
+                oembed = matches[0]
+            else:
+                # Nothing to do, is not an oembed
+                oembed = None
+        _oembed_objects[oembed_url] = oembed
+        
+    if _oembed_objects[oembed_url]:
+        return _oembed_objects[oembed_url].get_json(json_property)
+    else:
+        # This is debatable... probably an empty string is better
+        return oembed_url
