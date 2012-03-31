@@ -1,4 +1,3 @@
-import settings
 from django import template
 from django.template.defaultfilters import stringfilter
 from oembed.core import replace
@@ -94,4 +93,4 @@ def get_oembed_property(oembed_url, json_property):
     if _oembed_objects[oembed_url]:
         return _oembed_objects[oembed_url].get_json(json_property)
     else:
-        return settings.STATIC_URL + 'img/no-video-preview.png' 
+        return '' 
