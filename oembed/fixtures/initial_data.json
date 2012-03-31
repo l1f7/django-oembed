@@ -133,7 +133,7 @@
         "pk": 14,
         "model": "oembed.providerrule",
         "fields": {
-            "regex": "http://vimeo.com/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*",
+            "regex": "http[s]*://vimeo.com/[\d]*",
             "endpoint": "http://vimeo.com/api/oembed.json",
             "name": "Vimeo",
             "format": 1
