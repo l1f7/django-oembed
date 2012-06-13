@@ -1,1 +1,4 @@
-{% autoescape off %}{{ response.html }}{% endautoescape %}
+<div class="oembed-rich">
+    <div class="oembed-rich-object">{{ response.html|safe }}</div>
+    <div class="oembed-rich-url"><a href="{{ match }}">{% if response.title %}{{ response.title }}{% else %}{{ match }}{% endif %}</a></div>
+</div>

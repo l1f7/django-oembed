@@ -1,1 +1,4 @@
-{% autoescape off %}{{ response.html }}{% endautoescape %}
+<div class="oembed-video">
+    <div class="oembed-video-object">{{ response.html|safe }}</div>
+    <div class="oembed-video-url"><a href="{{ match }}">{% if response.title %}{{ response.title }}{% else %}{{ match }}{% endif %}</a></div>
+</div>
