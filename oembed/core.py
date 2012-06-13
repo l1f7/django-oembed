@@ -210,7 +210,7 @@ def replace(text, max_width=None, max_height=None):
                 # Depending on the embed type, grab the associated template and
                 # pass it the parsed JSON response as context.
                 replacement = render_to_string(
-                    'oembed/%s.html' % resp['type'], {'response': resp})
+                    'oembed/%s.html' % resp['type'], {'response': resp, 'match': part, })
                 if replacement:
                     stored_embed = StoredOEmbed.objects.create(
                         match = part,
