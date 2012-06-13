@@ -1,6 +1,7 @@
+import urllib
 from django import template
 from django.template.defaultfilters import stringfilter
-from django.utils import http
+from django.utils.encoding import smart_str, force_unicode
 from oembed.core import replace
 from oembed.models import StoredOEmbed
 
@@ -8,13 +9,13 @@ register = template.Library()
 
 
 @register.filter
-def urlunquote(value):
-    return http.urlunquote(value)
+def urlunquote(quoted_url):
+    return force_unicode(urllib.unquote(smart_str(quoted_url)))
 
 
 @register.filter
-def urlunquote_plus(value):
-    return http.urlunquote_plus(value)
+def urlunquote_plus(quoted_url):
+    return force_unicode(urllib.unquote_plus(smart_str(quoted_url)))
 
 
 def oembed(input, args=None):
