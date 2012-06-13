@@ -1,9 +1,21 @@
 from django import template
 from django.template.defaultfilters import stringfilter
+from django.utils import http
 from oembed.core import replace
 from oembed.models import StoredOEmbed
 
 register = template.Library()
+
+
+@register.filter
+def urlunquote(value):
+    return http.urlunquote(value)
+
+
+@register.filter
+def urlunquote_plus(value):
+    return http.urlunquote_plus(value)
+
 
 def oembed(input, args=None):
     if args:
