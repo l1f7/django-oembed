@@ -1,5 +1,6 @@
 import gzip
 import logging
+import os
 import re
 import urllib2
 import urlparse
@@ -144,14 +145,16 @@ def fetch_dict(url, max_width=None, max_height=None):
         # Fetch the link and parse the JSON.
         return simplejson.loads(fetch(oembedurl))
 
-def replace(text, max_width=None, max_height=None):
+def replace(text, max_width=None, max_height=None, template_dir='oembed'):
     """
     Scans a block of text, replacing anything matched by a ``ProviderRule``
     pattern with an OEmbed html snippet, if possible.
     
-    Templates should be stored at oembed/{format}.html, so for example:
+    Templates should be stored at {template_dir}/{format}.html, so for example:
         
         oembed/video.html
+        or
+        oembed/inline/video.html
         
     These templates are passed a context variable, ``response``, which is a 
     dictionary representation of the response.
@@ -210,7 +213,9 @@ def replace(text, max_width=None, max_height=None):
                 # Depending on the embed type, grab the associated template and
                 # pass it the parsed JSON response as context.
                 replacement = render_to_string(
-                    'oembed/%s.html' % resp['type'], {'response': resp, 'match': part, })
+                    os.path.join(template_dir, '{0}.html'.format(resp['type'])),
+                    {'response': resp, 'match': part, }
+                )
                 if replacement:
                     stored_embed = StoredOEmbed.objects.create(
                         match = part,
