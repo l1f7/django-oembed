@@ -1,4 +1,5 @@
 import urllib
+import HTMLParser
 from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.encoding import smart_str, force_unicode
@@ -6,6 +7,12 @@ from oembed.core import replace
 from oembed.models import StoredOEmbed
 
 register = template.Library()
+
+
+@register.filter
+def unescape(text):
+    """Decoding HTML Entities to Text in Python"""
+    return force_unicode(HTMLParser.HTMLParser().unescape(text))
 
 
 @register.filter
