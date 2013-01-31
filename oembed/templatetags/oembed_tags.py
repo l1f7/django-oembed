@@ -1,5 +1,7 @@
 import urllib
 import HTMLParser
+
+import django
 from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.encoding import smart_str, force_unicode
@@ -36,10 +38,13 @@ def oembed(input, args=None):
     else:
         width, height = None, None
     return replace(input, max_width=width, max_height=height)
-oembed.is_safe = True
 oembed = stringfilter(oembed)
 
-register.filter('oembed', oembed)
+if django.get_version() < "1.4":
+    oembed.is_safe = True
+    register.filter('oembed', oembed)
+else:
+    register.filter('oembed', oembed, is_safe=True)
 
 def do_oembed(parser, token):
     """
