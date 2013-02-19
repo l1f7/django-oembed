@@ -1,6 +1,7 @@
 import datetime
 from django.db import models
 from django.utils import simplejson
+from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
 JSON = 1
@@ -27,7 +28,7 @@ class StoredOEmbed(models.Model):
     html = models.TextField(_("html"))
     json = models.TextField(_("json"))
     date_added = models.DateTimeField(
-        _("date added"), default=datetime.datetime.now)
+        _("date added"), default=now)
 
     class Meta:
         ordering = ('-max_width',) # larger ones take precedence
