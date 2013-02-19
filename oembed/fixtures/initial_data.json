@@ -103,9 +103,9 @@
         "pk": 11,
         "model": "oembed.providerrule",
         "fields": {
-            "regex": "http://twitter.com/\\S*/statuses/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*",
-            "endpoint": "http://oohembed.com/oohembed/",
-            "name": "Twitter Status (OohEmbed)",
+            "regex": "https?://twitter.com/\\S*/status(es)?/[\\w\\-\\.~%/\\?#@!$&'\\(\\)\\*\\+,;=]*",
+            "endpoint": "http://api.twitter.com/1/statuses/oembed.json",
+            "name": "Twitter Status",
             "format": 1
         }
     },
