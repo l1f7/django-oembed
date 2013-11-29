@@ -32,6 +32,8 @@ class StoredOEmbed(models.Model):
 
     class Meta:
         ordering = ('-max_width',) # larger ones take precedence
+        verbose_name = u'Stored OEmbed'
+        verbose_name_plural = u'Stored OEmbeds'
 
     def __unicode__(self):
         return self.match
