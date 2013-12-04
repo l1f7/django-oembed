@@ -10,7 +10,6 @@ from oembed.models import StoredOEmbed
 
 register = template.Library()
 
-
 @register.filter
 def unescape(text):
     """Decoding HTML Entities to Text in Python"""
@@ -45,6 +44,7 @@ if django.get_version() < "1.4":
     register.filter('oembed', oembed)
 else:
     register.filter('oembed', oembed, is_safe=True)
+
 
 def do_oembed(parser, token):
     """

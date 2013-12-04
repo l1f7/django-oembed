@@ -17,7 +17,10 @@ except ImportError:
 
 from django.conf import settings
 from django.utils.http import urlencode
-from django.utils import simplejson
+try:
+    import json
+except ImportError:
+    from django.utils import simplejson as json
 from django.utils.safestring import mark_safe
 from django.template.loader import render_to_string
 
@@ -143,7 +146,7 @@ def fetch_dict(url, max_width=None, max_height=None):
     if rule is not None:
         oembedurl = build_url(rule.endpoint, url, max_width, max_height)
         # Fetch the link and parse the JSON.
-        return simplejson.loads(fetch(oembedurl))
+        return json.loads(fetch(oembedurl))
 
 def replace(text, max_width=None, max_height=None, template_dir='oembed'):
     """
@@ -209,7 +212,7 @@ def replace(text, max_width=None, max_height=None, template_dir='oembed'):
                 url = build_url(rule.endpoint, part, max_width, max_height)
                 # Fetch the link and parse the JSON.
                 json_string = fetch(url)
-                resp = simplejson.loads(json_string)
+                resp = json.loads(json_string)
                 # Depending on the embed type, grab the associated template and
                 # pass it the parsed JSON response as context.
                 replacement = render_to_string(
