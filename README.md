@@ -122,5 +122,5 @@ Changelog
       and the endpoint URL.  The ```simple``` parameter can be changed right in
       the list view.
     - Stored oEmbed list display shows match, max width, max height, and the
-      'simple' parameter.  The ```simple``` parameter can be changed right in
+      ```simple``` parameter.  The ```simple``` parameter can be changed right in
       the list view.
