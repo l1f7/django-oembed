@@ -5,11 +5,7 @@ This is a collection of tools for Django to allow for replacing links in text
 with OEmbed.  This application also provides utilities to make this process not
 prohibitively expensive CPU-wise.
 
-For installation instructions, read INSTALL.txt.
-
-Visit the google code page at http://django-oembed.googlecode.com/
-
-Thanks for downloading a Lift Interactive fork of django-oembed!
+Thanks for downloading a *Lift Interactive* fork of django-oembed!
 
 Prerequisites
 =============
@@ -91,8 +87,9 @@ embed object.
 For example, you can have a rule named *Twitter Status*, whose
 endpoint is ```https://api.twitter.com/1/statuses/oembed.json```, and have
 another Twitter endpoint named *Twitter Status (Simple)* whose endpoint is
-```https://api.twitter.com/1/statuses/oembed.json?hide_media=true&hide_thread=true&omit_script=true```.  If in your oembed template tag you include 'simple' as an argument,
-django-oembed will use the Provider Rule whose 'simple' parameter is checked.
+```https://api.twitter.com/1/statuses/oembed.json?hide_media=true&hide_thread=true&omit_script=true```.  If in your oembed template tag you include ```simple``` as an
+argument, django-oembed will use the Provider Rule whose ```simple``` parameter
+is checked.
 
 In the event that you forget to include a simple Provider Rule, django-oembed
 will fall back to using the regular Provider Rule.
@@ -103,7 +100,7 @@ Stored oEmbeds
 Instead of re-creating the embed object from scratch every time, if a URL
 matches with the URL of a Stored oEmbed object, django-oembed will use the HTML
 code in the Stored oEmbed's ```html``` field.  A Stored oEmbed can be created
-for a regular and a 'simple' embed.
+for a regular and a ```simple``` embed.
 
 Changelog
 =========
@@ -114,9 +111,9 @@ Changelog
     - Falls back to a non-simple Provider Rule if no simple Provider Rule
       exists
 - Improved Django Admin integration
-    - Provider Rule list display shows provider name, 'simple' parameter, and
-      the endpoint URL.  The 'simple' parameter can be changed right in the
-      list view.
+    - Provider Rule list display shows provider name, ```simple``` parameter,
+      and the endpoint URL.  The ```simple``` parameter can be changed right in
+      the list view.
     - Stored oEmbed list display shows match, max width, max height, and the
-      'simple' parameter.  The 'simple' parameter can be changed right in the
-      list view.
+      'simple' parameter.  The ```simple``` parameter can be changed right in
+      the list view.
