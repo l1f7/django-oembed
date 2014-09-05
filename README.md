@@ -86,12 +86,14 @@ embed object.
 
 For example, you can have a rule named *Twitter Status*, whose
 endpoint is:
-    https://api.twitter.com/1/statuses/oembed.json
-
+```
+https://api.twitter.com/1/statuses/oembed.json
+```
 and have another Twitter endpoint named *Twitter Status (Simple)* whose
 endpoint is:
-    https://api.twitter.com/1/statuses/oembed.json?hide_media=true&hide_thread=true&omit_script=true
-
+```
+https://api.twitter.com/1/statuses/oembed.json?hide_media=true&hide_thread=true&omit_script=true
+```
 If in your oembed template tag you include ```simple``` as an
 argument, django-oembed will use the Provider Rule whose ```simple``` parameter
 is checked.
