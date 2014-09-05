@@ -5,12 +5,12 @@ setup(
     version='0.1.5',
     description='A collection of Django tools which make it easy to change'
         'text filled with oembed links into the embedded objects themselves.',
-    author='Eric Florenzano',
-    author_email='floguy@gmail.com',
-    url='http://django-oembed.googlecode.com',
+    author='Lift Interactive and Eric Florenzano',
+    author_email='aaron@liftinteractive.com',
+    url='https://github.com/l1f7/django-oembed',
     packages=find_packages(),
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
