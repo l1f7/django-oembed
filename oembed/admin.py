@@ -28,6 +28,9 @@ class ProviderRuleAdmin(admin.ModelAdmin):
 admin.site.register(ProviderRule, ProviderRuleAdmin)
 
 class StoredOEmbedAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['match', 'max_width', 'max_height', 'simple']
+    list_editable = ['simple']
+    list_filter = ['simple']
+    search_fields = ['match']
 
 admin.site.register(StoredOEmbed, StoredOEmbedAdmin)
