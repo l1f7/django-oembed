@@ -148,7 +148,7 @@ def fetch_dict(url, max_width=None, max_height=None):
         # Fetch the link and parse the JSON.
         return json.loads(fetch(oembedurl))
 
-def replace(text, max_width=None, max_height=None, template_dir='oembed'):
+def replace(text, max_width=None, max_height=None, template_dir='oembed', simple=False):
     """
     Scans a block of text, replacing anything matched by a ``ProviderRule``
     pattern with an OEmbed html snippet, if possible.
@@ -167,7 +167,15 @@ def replace(text, max_width=None, max_height=None, template_dir='oembed'):
     if not max_height:
         max_height = MAX_HEIGHT
 
-    rules = list(ProviderRule.objects.all())
+    queryset = ProviderRule.objects.filter(simple=simple)
+
+    # If respecting the 'simple' parameter gives us no Provider Rules,
+    # return all Provider Rules, disregarding the 'simple' parameter.
+    if queryset.count() == 0:
+        queryset = ProviderRule.objects.all()
+
+    rules = list(queryset)
+
     patterns = [re.compile(r.regex, re.I | re.U) for r in rules] # Compiled patterns from the rules
     parts = [] # The parts that we will assemble into the final return value.
     indices = [] # List of indices of parts that need to be replaced with OEmbed stuff.
@@ -175,9 +183,15 @@ def replace(text, max_width=None, max_height=None, template_dir='oembed'):
     urls = set() # A set of URLs to try to lookup from the database.
     stored = {} # A mapping of URLs to StoredOEmbed objects.
     index = 0
+
     # First we pass through the text, populating our data structures.
     for i, part in re_parts(patterns, text):
-        if i == -1:
+        # If using the list of simple ProviderRules gave us an inconclusive
+        # match, try again with all non-simple ProviderRules.
+        if i == -1 and simple == True:
+            return replace(text, max_width=max_width, max_height=max_height,
+                           template_dir=template_dir, simple=False)
+        elif i == -1:
             parts.append(part)
             index += 1
         else:
@@ -194,10 +208,11 @@ def replace(text, max_width=None, max_height=None, template_dir='oembed'):
             if to_append:
                 parts.append(to_append)
                 index += 1
+
     # Now we fetch a list of all stored patterns, and put it in a dictionary
     # mapping the URL to to the stored model instance.
     for stored_embed in StoredOEmbed.objects.filter(
-            match__in=urls, max_width=max_width, max_height=max_height):
+            match__in=urls, max_width=max_width, max_height=max_height, simple=simple):
         stored[stored_embed.match] = stored_embed
     # Now we're going to do the actual replacement of URL to embed.
     for i, id_to_replace in enumerate(indices):
@@ -226,6 +241,7 @@ def replace(text, max_width=None, max_height=None, template_dir='oembed'):
                         max_height = max_height,
                         html = replacement,
                         json = json_string,
+                        simple = simple,
                     )
                     stored[stored_embed.match] = stored_embed
                     parts[id_to_replace] = replacement

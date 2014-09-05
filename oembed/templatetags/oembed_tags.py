@@ -51,42 +51,47 @@ def do_oembed(parser, token):
     A node which parses everything between its two nodes, and replaces any
     links with OEmbed-provided objects, if possible.
 
-    Supports one optional argument, which is the maximum width and height,
-    specified like so:
+    Supports two optional arguments, one which is the maximum width and height,
+    the other which specifies whether to use the simple provider, specified
+    like so:
 
-        {% oembed 640x480 %}http://www.viddler.com/explore/SYSTM/videos/49/{% endoembed %}
+                {% oembed 640x480 simple %}
+                    http://www.viddler.com/explore/SYSTM/videos/49/
+                {% endoembed %}
     """
-    args = token.contents.split()
-    if len(args) > 2:
-        raise template.TemplateSyntaxError("Oembed tag takes only one (option" \
-            "al) argument: WIDTHxHEIGHT, where WIDTH and HEIGHT are positive " \
-            "integers.")
-    if len(args) == 2:
-        try:
-            width, height = map(int, args[1].lower().split('x'))
-        except ValueError:
-            raise template.TemplateSyntaxError("Oembed's optional " \
-                "WIDTHxHEIGHT argument requires WIDTH and HEIGHT to be " \
-                "positive integers.")
+    width = None
+    height = None
+    simple = False
+
+    tokens = token.split_contents()
+    if len(tokens) > 3:
+        raise template.TemplateSyntaxError(
+            "Oembed tag takes two (optional) arguments: WIDTHxHEIGHT, where \
+             WIDTH and HEIGHT are positive integers, and 'simple', which \
+             tries to render the embed object in a basic layout.")
     else:
-        width, height = None, None
+        width, height, simple = _parse_oembed_tag_tokens(tokens)
+
     nodelist = parser.parse(('endoembed',))
     parser.delete_first_token()
-    return OEmbedNode(nodelist, width, height)
+    return OEmbedNode(nodelist, width, height, simple)
 
 register.tag('oembed', do_oembed)
 
 class OEmbedNode(template.Node):
-    def __init__(self, nodelist, width, height):
+    def __init__(self, nodelist, width, height, simple):
         self.nodelist = nodelist
         self.width = width
         self.height = height
+        self.simple = simple
 
     def render(self, context):
         kwargs = {}
         if self.width and self.height:
             kwargs['max_width'] = self.width
             kwargs['max_height'] = self.height
+        if self.simple:
+            kwargs['simple'] = self.simple
         return replace(self.nodelist.render(context), **kwargs)
 
 # This comes in handy, so you don't hit the database so many times
@@ -114,8 +119,28 @@ def get_oembed_property(oembed_url, json_property):
                 # Nothing to do, is not an oembed
                 oembed = None
         _oembed_objects[oembed_url] = oembed
-        
+
     if _oembed_objects[oembed_url]:
         return _oembed_objects[oembed_url].get_json(json_property)
     else:
-        return '' 
+        return ''
+
+def _parse_oembed_tag_tokens(tokens):
+    width = None
+    height = None
+    simple = False
+
+    for t in tokens:
+        if t == "oembed":
+            continue
+        elif t == "simple":
+            simple = True
+        else:
+            try:
+                width, height = map(int, t.lower().split('x'))
+            except ValueError:
+                raise template.TemplateSyntaxError("Oembed's optional " \
+                    "WIDTHxHEIGHT argument requires WIDTH and HEIGHT to be " \
+                    "positive integers.")
+
+    return width, height, simple
