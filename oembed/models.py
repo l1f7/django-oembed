@@ -39,8 +39,8 @@ class StoredOEmbed(models.Model):
     date_added = models.DateTimeField(
         _("date added"), default=now)
     simple = models.BooleanField(_("simple"), default=False,
-                help_text="Specify whether this provider generates a simple, \
-                           minimalistic embed object.")
+                help_text="Specify whether this is a simple, minimalistic \
+                           embed object.")
 
     class Meta:
         ordering = ('-max_width',) # larger ones take precedence
