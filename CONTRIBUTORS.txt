@@ -9,3 +9,4 @@ Simon Meers
 Thomas Ashelford
 Jiří Suchan
 Aram Dulyan
+Aaron Yong <aaron@liftinteractive.com>

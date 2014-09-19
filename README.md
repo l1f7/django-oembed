@@ -112,6 +112,11 @@ for a regular and a ```simple``` embed.
 Changelog
 =========
 
+0.1.6
+-----
+- Fixed cases where ```simple``` checks were pre-maturely killing the regex
+  matching logic
+
 0.1.5 (Where this fork begins)
 ------------------------------
 - New optional ```simple``` argument for the ```{% oembed %}``` template tag

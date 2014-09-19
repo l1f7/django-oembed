@@ -186,12 +186,7 @@ def replace(text, max_width=None, max_height=None, template_dir='oembed', simple
 
     # First we pass through the text, populating our data structures.
     for i, part in re_parts(patterns, text):
-        # If using the list of simple ProviderRules gave us an inconclusive
-        # match, try again with all non-simple ProviderRules.
-        if i == -1 and simple == True:
-            return replace(text, max_width=max_width, max_height=max_height,
-                           template_dir=template_dir, simple=False)
-        elif i == -1:
+        if i == -1:
             parts.append(part)
             index += 1
         else:
@@ -208,6 +203,12 @@ def replace(text, max_width=None, max_height=None, template_dir='oembed', simple
             if to_append:
                 parts.append(to_append)
                 index += 1
+
+    if not len(indices) and simple == True:
+        # If using the list of simple ProviderRules gave us an inconclusive
+        # match, try again with all non-simple ProviderRules.
+        return replace(text, max_width=max_width, max_height=max_height,
+                           template_dir=template_dir, simple=False)
 
     # Now we fetch a list of all stored patterns, and put it in a dictionary
     # mapping the URL to to the stored model instance.
