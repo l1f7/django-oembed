@@ -167,14 +167,12 @@ def replace(text, max_width=None, max_height=None, template_dir='oembed', simple
     if not max_height:
         max_height = MAX_HEIGHT
 
-    queryset = ProviderRule.objects.filter(simple=simple)
+    rules = ProviderRule.objects.filter(simple=simple)
 
     # If respecting the 'simple' parameter gives us no Provider Rules,
     # return all Provider Rules, disregarding the 'simple' parameter.
-    if queryset.count() == 0:
-        queryset = ProviderRule.objects.all()
-
-    rules = list(queryset)
+    if rules.count() == 0:
+        rules = ProviderRule.objects.all()
 
     patterns = [re.compile(r.regex, re.I | re.U) for r in rules] # Compiled patterns from the rules
     parts = [] # The parts that we will assemble into the final return value.
@@ -215,6 +213,11 @@ def replace(text, max_width=None, max_height=None, template_dir='oembed', simple
     for stored_embed in StoredOEmbed.objects.filter(
             match__in=urls, max_width=max_width, max_height=max_height, simple=simple):
         stored[stored_embed.match] = stored_embed
+
+    # This is the array of parts which will be rendered into the template.
+    # The contents surrounding a matched URL will be stripped away.
+    render_parts = []
+
     # Now we're going to do the actual replacement of URL to embed.
     for i, id_to_replace in enumerate(indices):
         rule = rules[indices_rules[i]]
@@ -222,6 +225,7 @@ def replace(text, max_width=None, max_height=None, template_dir='oembed', simple
         try:
             # Try to grab the stored model instance from our dictionary, and
             # use the stored HTML fragment as a replacement.
+            render_parts.append(stored[part].html)
             parts[id_to_replace] = stored[part].html
         except KeyError:
             try:
@@ -245,14 +249,16 @@ def replace(text, max_width=None, max_height=None, template_dir='oembed', simple
                         simple = simple,
                     )
                     stored[stored_embed.match] = stored_embed
+                    render_parts.append(replacement)
                     parts[id_to_replace] = replacement
                 else:
                     raise ValueError
-            except ValueError:
+            except (ValueError, KeyError, urllib2.HTTPError):
                 parts[id_to_replace] = part
-            except KeyError:
-                parts[id_to_replace] = part
-            except urllib2.HTTPError:
-                parts[id_to_replace] = part
+
     # Combine the list into one string and return it.
-    return mark_safe(u''.join(parts).replace('http://','//'))
+    if not render_parts:
+        # Fall back to rendering verbatim if no oEmbed replacement happened.
+        return mark_safe(u''.join(parts).replace('http://','//'))
+    else:
+        return mark_safe(u''.join(render_parts).replace('http://','//'))

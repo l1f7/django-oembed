@@ -112,6 +112,12 @@ for a regular and a ```simple``` embed.
 Changelog
 =========
 
+0.1.7
+-----
+- Anything that isn't a URL in between the ```{% oembed %}``` and
+  ```{% endoembed %}``` tags is removed, unless that means nothing is displayed,
+  in which case, everything in between the tags is rendered verbatim.
+
 0.1.6
 -----
 - Fixed cases where ```simple``` checks were pre-maturely killing the regex

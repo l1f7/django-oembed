@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
  
 setup(
     name='django-oembed',
-    version='0.1.6',
+    version='0.1.7',
     description='A collection of Django tools which make it easy to change'
         'text filled with oembed links into the embedded objects themselves.',
     author='Lift Interactive and Eric Florenzano',
