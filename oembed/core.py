@@ -259,6 +259,6 @@ def replace(text, max_width=None, max_height=None, template_dir='oembed', simple
     # Combine the list into one string and return it.
     if not render_parts:
         # Fall back to rendering verbatim if no oEmbed replacement happened.
-        return mark_safe(u''.join(parts).replace('http://','//'))
+        return mark_safe(u''.join(parts))
     else:
-        return mark_safe(u''.join(render_parts).replace('http://','//'))
+        return mark_safe(u''.join(render_parts))
