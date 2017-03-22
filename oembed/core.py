@@ -2,18 +2,18 @@ import gzip
 import logging
 import os
 import re
-import urllib2
-import urlparse
+import urllib.request, urllib.error, urllib.parse
+import urllib.parse
 try:
-    from urlparse import parse_qs
+    from urllib.parse import parse_qs
 except ImportError:
     # (copied to urlparse from cgi in 2.6)
     from cgi import parse_qs
 from heapq import heappush, heappop
 try:
-    from cStringIO import StringIO
+    from io import StringIO
 except ImportError:
-    from StringIO import StringIO
+    from io import StringIO
 
 from django.conf import settings
 from django.utils.http import urlencode
@@ -37,10 +37,10 @@ def fetch(url, user_agent="django-oembed/0.1"):
     """
     Fetches from a URL, respecting GZip encoding, etc.
     """
-    request = urllib2.Request(url)
+    request = urllib.request.Request(url)
     request.add_header('User-Agent', user_agent)
     request.add_header('Accept-Encoding', 'gzip')
-    opener = urllib2.build_opener()
+    opener = urllib.request.build_opener()
     f = opener.open(request)
     result = f.read()
     if f.headers.get('content-encoding', '') == 'gzip':
@@ -78,9 +78,9 @@ def re_parts(regex_list, text):
     matches = []
     
     # Bootstrap the search with the first hit for each iterator
-    for regex, iterator in iter_dict.items():
+    for regex, iterator in list(iter_dict.items()):
         try:
-            match = iterator.next()
+            match = next(iterator)
             heappush(matches, (match.start(), match))
         except StopIteration:
             iter_dict.pop(regex)
@@ -98,7 +98,7 @@ def re_parts(regex_list, text):
         # Get the next match from the iterator for this match
         if match.re in iter_dict:
             try:
-                newmatch = iter_dict[match.re].next()
+                newmatch = next(iter_dict[match.re])
                 heappush(matches, (newmatch.start(), newmatch))
             except StopIteration:
                 iter_dict.pop(match.re)
@@ -111,7 +111,7 @@ def re_parts(regex_list, text):
 
 def build_url(endpoint, url, max_width, max_height):
     # Split up the URL and extract GET parameters as a dictionary
-    split_url = urlparse.urlsplit(endpoint)
+    split_url = urllib.parse.urlsplit(endpoint)
     params = parse_qs(split_url[3])
     params.update({
         'url': url,
@@ -121,7 +121,7 @@ def build_url(endpoint, url, max_width, max_height):
         })
     # Put the URL back together with the new params and return it
     params = urlencode(params, True)
-    return urlparse.urlunsplit(split_url[:3] + (params,) + split_url[4:])
+    return urllib.parse.urlunsplit(split_url[:3] + (params,) + split_url[4:])
 
 def fetch_dict(url, max_width=None, max_height=None):
     """
@@ -253,12 +253,12 @@ def replace(text, max_width=None, max_height=None, template_dir='oembed', simple
                     parts[id_to_replace] = replacement
                 else:
                     raise ValueError
-            except (ValueError, KeyError, urllib2.HTTPError):
+            except (ValueError, KeyError, urllib.error.HTTPError):
                 parts[id_to_replace] = part
 
     # Combine the list into one string and return it.
     if not render_parts:
         # Fall back to rendering verbatim if no oEmbed replacement happened.
-        return mark_safe(u''.join(parts))
+        return mark_safe(''.join(parts))
     else:
-        return mark_safe(u''.join(render_parts))
+        return mark_safe(''.join(render_parts))
